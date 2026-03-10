@@ -14,7 +14,9 @@ class UsersTable
     {
         return $table
             ->columns([
-                TextColumn::make('name')->searchable()->sortable(),
+                TextColumn::make('name')
+                    ->searchable()
+                    ->sortable(),
                 TextColumn::make('email')->searchable()->sortable(),
                 TextColumn::make('created_at') // Menambah kolom Created at 
                     ->dateTime()

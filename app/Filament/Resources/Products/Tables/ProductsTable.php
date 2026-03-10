@@ -17,7 +17,8 @@ class ProductsTable
     {
         return $table
             ->columns([
-                TextColumn::make('name'),
+                TextColumn::make('name')
+                    ->sortable(),
                 TextColumn::make('sku'),
                 TextColumn::make('price'),
                 TextColumn::make('stock'),
