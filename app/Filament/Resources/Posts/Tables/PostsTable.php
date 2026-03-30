@@ -5,6 +5,10 @@ namespace App\Filament\Resources\Posts\Tables;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\ReplicateAction;
+use Filament\Actions\Action;
+use Filament\Forms\Components\Checkbox;
 use Filament\Tables\Table;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ColorColumn;
@@ -88,6 +92,26 @@ class PostsTable
             ])
             ->recordActions([
                 EditAction::make(),
+                DeleteAction::make()
+                    ->icon('heroicon-o-trash'),
+                ReplicateAction::make()
+                    ->icon('heroicon-o-document-duplicate'),
+                Action::make('status')
+                    ->label('Status Change')
+                    ->icon('heroicon-o-check-circle')
+                    ->requiresConfirmation()
+                    ->modalHeading('Ubah Status Published')
+                    ->modalDescription('Apakah Anda yakin ingin mengubah status published postingan ini?')
+                    ->form([
+                        Checkbox::make('published')
+                            ->label('Published')
+                            ->default(fn ($record) => $record->published),
+                    ])
+                    ->action(function ($record, array $data) {
+                        $record->update([
+                            'published' => $data['published'],
+                        ]);
+                    }),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
