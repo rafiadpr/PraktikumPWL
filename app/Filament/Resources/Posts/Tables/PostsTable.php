@@ -9,6 +9,7 @@ use Filament\Tables\Table;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ColorColumn;
 use Filament\Tables\Columns\ImageColumn;
+use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Forms\Components\DatePicker;
@@ -22,23 +23,40 @@ class PostsTable
         return $table
             ->defaultSort('created_at', 'desc')
             ->columns([
+                TextColumn::make('id')
+                    ->label('ID')
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('title')
                     ->sortable()
-                    ->searchable(),
+                    ->searchable()
+                    ->toggleable(),
                 TextColumn::make('slug')
                     ->sortable()
-                    ->searchable(),
+                    ->searchable()
+                    ->toggleable(),
                 TextColumn::make('category.name')
                     ->sortable()
-                    ->searchable(),
-                ColorColumn::make('color'),
+                    ->searchable()
+                    ->toggleable(),
+                ColorColumn::make('color')
+                    ->toggleable(),
                 ImageColumn::make('image')
                     ->disk('public')
-                    ->visibility('public'),
+                    ->visibility('public')
+                    ->toggleable(),
+                TextColumn::make('tags')
+                    ->label('Tags')
+                    ->toggleable(isToggledHiddenByDefault: true),
+                IconColumn::make('published')
+                    ->label('Published')
+                    ->boolean()
+                    ->toggleable(),
                 TextColumn::make('published_at')
                     ->label('Published At')
                     ->dateTime()
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(),
             ])
             ->filters([
                 Filter::make('created_at')
@@ -50,8 +68,8 @@ class PostsTable
                         return $query
                             ->when(
                                 $data['created_at'],
-                                fn (Builder $query, $date): Builder =>
-                                    $query->whereDate('created_at', '=', $date),
+                                fn(Builder $query, $date): Builder =>
+                                $query->whereDate('created_at', '=', $date),
                             );
                     })
                     ->indicateUsing(function (array $data): array {

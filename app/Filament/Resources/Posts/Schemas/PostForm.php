@@ -53,7 +53,7 @@ class PostForm
                                     ->preload()
                                     ->columnSpanFull(),
 
-                                MarkdownEditor::make('content')
+                                MarkdownEditor::make('body')
                                     ->columnSpanFull(),
                             ])->columns(3),
                     ])->columnSpan(2),
