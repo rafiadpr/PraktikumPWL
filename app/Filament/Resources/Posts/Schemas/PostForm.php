@@ -13,6 +13,7 @@ use Filament\Forms\Components\DateTimePicker;
 use Filament\Schemas\Components\Section;
 use Filament\Support\Icons\Heroicon;
 use Filament\Schemas\Components\Group;
+use App\Models\Category;
 
 class PostForm
 {
@@ -21,7 +22,6 @@ class PostForm
         return $schema
             ->columns(3)
             ->components([
-                // BAGIAN KIRI (2/3 Kolom)
                 Group::make()
                     ->schema([
                         Section::make('Konten Utama')
@@ -50,7 +50,9 @@ class PostForm
                                 Select::make('category_id')
                                     ->required() // Category wajib dipilih
                                     ->relationship("category", "name")
-                                    ->preload()
+                                    ->searchable() // Memungkinkan user mencari kategori dengan mengetik
+                                    ->options(Category::all()->pluck('name', 'id'))
+                                    // ->preload()
                                     ->columnSpanFull(),
 
                                 MarkdownEditor::make('body')
@@ -73,7 +75,10 @@ class PostForm
                         Section::make('Meta & Status')
                             ->icon('heroicon-m-cog-6-tooth')
                             ->schema([
-                                TagsInput::make('tags'),
+                                Select::make('tags')
+                                    ->relationship('tags', 'name')
+                                    ->multiple()
+                                    ->preload(),
                                 Checkbox::make('published'),
                                 DateTimePicker::make('published_at'),
                             ]),

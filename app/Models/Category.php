@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Category extends Model
 {
@@ -10,4 +11,13 @@ class Category extends Model
         'name',
         'slug',
     ];
+
+    /**
+     * Relasi HasMany: Satu Category memiliki banyak Post.
+     * Laravel otomatis mencari kolom 'category_id' di tabel posts.
+     */
+    public function posts()
+    {
+        return $this->hasMany(Post::class);
+    }
 }
